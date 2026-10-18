@@ -1,0 +1,12 @@
+<Project>
+  <!-- Copy to local.props (not committed). -->
+  <PropertyGroup>
+    <!-- the game folder; the build matching the installed runtime is copied there by ./build.ps1 -Deploy -->
+    <GameDir>C:\Program Files (x86)\Steam\steamapps\common\Tainted Grail FoA</GameDir>
+    <!-- optional: where the other runtime's references live, if it is not the one installed in GameDir -->
+    <!-- IL2CPP: a folder with BepInEx\core and BepInEx\interop from BepInEx 6 (game started once) -->
+    <!-- <Il2CppDir>D:\TG-refs\il2cpp</Il2CppDir> -->
+    <!-- Mono: a folder with Fall of Avalon_Data\Managed and BepInEx\core from BepInEx 5 -->
+    <!-- <MonoDir>D:\TG-refs\mono</MonoDir> -->
+  </PropertyGroup>
+</Project>

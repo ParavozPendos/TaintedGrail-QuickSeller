@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- One source, two builds: net6.0 = IL2CPP game (BepInEx 6), netstandard2.1 = Mono game (BepInEx 5). -->
+  <PropertyGroup>
+    <AssemblyName>QuickSeller</AssemblyName>
+    <RootNamespace>QuickSeller</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>disable</Nullable>
+    <Version>1.0.0</Version>
+    <Deterministic>true</Deterministic>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <Import Project="Runtimes.props" />
+  <ItemGroup Condition="'$(ModRuntime)' == 'IL2CPP'">
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\TG.Main.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\Unity.Localization.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\Unity.TextMeshPro.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\UnityEngine.UI.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\Awaken.Utility.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\Rewired_Core.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\UnityEngine.IMGUIModule.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\UnityEngine.UIElementsModule.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\EnhydraGames.BetterTextOutline.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\interop\UnityEngine.TextRenderingModule.dll" Private="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(ModRuntime)' == 'Mono'">
+    <Reference Include="$(MonoManaged)\UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\TG.Main.dll" Private="false" Publicize="true" />
+    <Reference Include="$(MonoManaged)\Unity.Localization.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\Unity.TextMeshPro.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\UnityEngine.UI.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\Awaken.Utility.dll" Private="false" Publicize="true" />
+    <Reference Include="$(MonoManaged)\Rewired_Core.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\UnityEngine.IMGUIModule.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\UnityEngine.UIElementsModule.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\EnhydraGames.BetterTextOutline.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\UnityEngine.TextRenderingModule.dll" Private="false" />
+  </ItemGroup>
+</Project>

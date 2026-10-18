@@ -1,0 +1,67 @@
+<Project>
+  <!--
+    Two builds from one source:
+      net6.0         -> IL2CPP game (default Steam/GOG build) + BepInEx 6, references from BepInEx\interop
+      netstandard2.1 -> Mono game ("mono" beta branch) + BepInEx 5, references from Fall of Avalon_Data\Managed
+    Each build is made when its references are found. Paths: local.props (not committed) or -p:Name=value.
+  -->
+  <Import Project="local.props" Condition="Exists('local.props')" />
+  <PropertyGroup>
+    <GameDir Condition="'$(GameDir)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Tainted Grail FoA</GameDir>
+    <Il2CppDir Condition="'$(Il2CppDir)' == ''">$(GameDir)</Il2CppDir>
+    <MonoDir Condition="'$(MonoDir)' == ''">$(GameDir)</MonoDir>
+    <MonoManaged>$(MonoDir)\Fall of Avalon_Data\Managed</MonoManaged>
+    <HasIl2Cpp Condition="Exists('$(Il2CppDir)\BepInEx\interop\TG.Main.dll')">true</HasIl2Cpp>
+    <HasMono Condition="Exists('$(MonoManaged)\TG.Main.dll') And Exists('$(MonoDir)\BepInEx\core\BepInEx.dll')">true</HasMono>
+    <GameRuntime Condition="Exists('$(GameDir)\GameAssembly.dll')">IL2CPP</GameRuntime>
+    <GameRuntime Condition="'$(GameRuntime)' == '' And Exists('$(GameDir)\Fall of Avalon_Data\Managed\TG.Main.dll')">Mono</GameRuntime>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFrameworks)' == ''">
+    <TargetFrameworks Condition="'$(HasIl2Cpp)' == 'true' And '$(HasMono)' == 'true'">net6.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks Condition="'$(HasIl2Cpp)' == 'true' And '$(HasMono)' != 'true'">net6.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(HasIl2Cpp)' != 'true' And '$(HasMono)' == 'true'">netstandard2.1</TargetFrameworks>
+    <TargetFrameworks Condition="'$(HasIl2Cpp)' != 'true' And '$(HasMono)' != 'true'">net6.0;netstandard2.1</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <ModRuntime>IL2CPP</ModRuntime>
+    <DefineConstants>$(DefineConstants);IL2CPP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <ModRuntime>Mono</ModRuntime>
+    <DefineConstants>$(DefineConstants);MONO</DefineConstants>
+    <!-- compile against the game's own mscorlib: exactly the API available at run time -->
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(ModRuntime)' == 'IL2CPP'">
+    <Reference Include="$(Il2CppDir)\BepInEx\core\BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\core\BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\core\0Harmony.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\core\Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(Il2CppDir)\BepInEx\core\Il2CppInterop.Common.dll" Private="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(ModRuntime)' == 'Mono'">
+    <Reference Include="$(MonoManaged)\mscorlib.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\netstandard.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\System.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\System.Core.dll" Private="false" />
+    <Reference Include="$(MonoManaged)\UnityEngine.dll" Private="false" />
+    <Reference Include="$(MonoDir)\BepInEx\core\BepInEx.dll" Private="false" />
+    <Reference Include="$(MonoDir)\BepInEx\core\0Harmony.dll" Private="false" />
+    <!-- private game members are public under Il2CppInterop; for Mono the game assembly is publicized at build time -->
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <Target Name="CheckGameRefs" BeforeTargets="ResolveAssemblyReferences" Condition="'$(TargetFramework)' != ''">
+    <Error Condition="'$(ModRuntime)' == 'IL2CPP' And '$(HasIl2Cpp)' != 'true'" Text="IL2CPP references not found. Set Il2CppDir in local.props: a game folder with BepInEx 6 IL2CPP that was started once (BepInEx\interop)." />
+    <Error Condition="'$(ModRuntime)' == 'Mono' And '$(HasMono)' != 'true'" Text="Mono references not found. Set MonoDir in local.props: a Mono-branch game folder with BepInEx 5." />
+  </Target>
+
+  <!-- copies the build that matches the game installed in GameDir -->
+  <Target Name="Deploy" AfterTargets="Build" Condition="'$(NoDeploy)' != 'true' And '$(TargetFramework)' != '' And '$(ModRuntime)' == '$(GameRuntime)'">
+    <MakeDir Directories="$(GameDir)\BepInEx\plugins\$(AssemblyName)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)\BepInEx\plugins\$(AssemblyName)" />
+    <Message Importance="high" Text="$(AssemblyName): $(ModRuntime) build copied to the game" />
+  </Target>
+</Project>
