@@ -10,12 +10,13 @@ Sell loot on the spot in **Tainted Grail: The Fall of Avalon** — for a share o
 - UI follows the game language.
 
 ## Install
+
 Pick the file for your game build. If the game folder has `GameAssembly.dll`, it is **IL2CPP** (the default Steam/GOG build); otherwise it is **Mono** (Steam → Properties → Betas → `mono`).
 
-| Game build | Loader | File |
-|---|---|---|
-| IL2CPP (default) | [BepInEx 6 IL2CPP](https://builds.bepinex.dev/projects/bepinex_be) x64, tested with 6.0.0-be.789 | `QuickSeller-x.y.z-IL2CPP.zip` |
-| Mono (`mono` beta) | [BepInEx 5](https://github.com/BepInEx/BepInEx/releases) x64, tested with 5.4.23.5 | `QuickSeller-x.y.z-Mono.zip` |
+| Game build         | Loader                                                                                           | File                           |
+| ------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------ |
+| IL2CPP (default)   | [BepInEx 6 IL2CPP](https://builds.bepinex.dev/projects/bepinex_be) x64, tested with 6.0.0-be.789 | `QuickSeller-x.y.z-IL2CPP.zip` |
+| Mono (`mono` beta) | [BepInEx 5](https://github.com/BepInEx/BepInEx/releases) x64, tested with 5.4.23.5               | `QuickSeller-x.y.z-Mono.zip`   |
 
 1. Install the loader into the game folder and start the game once.
 2. Download the matching zip from [Releases](../../releases) and extract it into the game folder — the dll goes to `BepInEx\plugins\QuickSeller\`.
@@ -24,8 +25,11 @@ Pick the file for your game build. If the game folder has `GameAssembly.dll`, it
 To uninstall, delete `BepInEx\plugins\QuickSeller`.
 
 ## Build
+
 .NET SDK 6+. One source builds both runtimes (`net6.0` → IL2CPP, `netstandard2.1` → Mono); each one is built when its references are found:
 IL2CPP needs a game folder with BepInEx 6 started once (`BepInEx\interop`), Mono needs a Mono-branch game folder with BepInEx 5.
 Copy `local.props.example` to `local.props` and set the paths, then run `./build.ps1` (zips go to `dist\`; `-Deploy` also copies the matching dll into the game).
 
 License: MIT.
+
+> **Note:** Parts of the UI were made with the help of AI tools.
