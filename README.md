@@ -29,3 +29,6 @@ IL2CPP needs a game folder with BepInEx 6 started once (`BepInEx\interop`), Mono
 Copy `local.props.example` to `local.props` and set the paths, then run `./build.ps1` (zips go to `dist\`; `-Deploy` also copies the matching dll into the game).
 
 License: MIT.
+
+## AI usage
+Parts of the in-game UI were made with the help of AI tools: the sell prompts, price labels, gold popups and the buyback window.
