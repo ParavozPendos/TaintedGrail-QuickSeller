@@ -83,7 +83,7 @@ public class Plugin :
             "UI language: auto = same as the game, or en, ru, de, fr, es, it, pl, cs, pt, ja, ko, zh-Hans, zh-Hant, uk | Язык: auto = как в игре");
         ShowConsole = Config.Bind("General", "ShowConsole", false,
             "Show the BepInEx console window (logs still go to BepInEx\\LogOutput.log) | Показывать окно консоли BepInEx (лог всё равно пишется в файл)");
-        PenaltyPercent = Config.Bind("General", "SellPenaltyPercent", 50f,
+        PenaltyPercent = Config.Bind("General", "SellPenaltyPercent", 60f,
             new ConfigDescription("Penalty to the normal sell price, %. 50 = you get half of what a merchant would pay | Штраф к обычной цене продажи, %", new AcceptableValueRange<float>(0f, 95f)));
 
         KeyBinding = Config.Bind("Loot", "SellAction", "DropItem",
